@@ -40,7 +40,7 @@ fun CheckoutScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Text("✓ تم اعتماد الطلب بنجاح: ${state.lastOrder.orderId}", fontWeight = FontWeight.Bold, color = BrandPrimary)
+                    Text("[OK] تم اعتماد الطلب بنجاح: ${state.lastOrder.orderId}", fontWeight = FontWeight.Bold, color = BrandPrimary)
                     Text("الإجمالي المسدد: ${state.lastOrder.totalSar} ر.س (شامل 15% ضريبة)", fontSize = 13.sp, color = BrandTextPrimary)
                     Text("بوابة الدفع: ${state.lastOrder.paymentMethod}", fontSize = 11.sp, color = BrandTextSecondary)
                 }
@@ -67,7 +67,7 @@ fun CheckoutScreen(
                             Text(item.title, color = BrandTextPrimary, fontSize = 13.sp, modifier = Modifier.weight(1f))
                             Text("${item.priceSar} ر.س", color = BrandSecondary, fontWeight = FontWeight.Bold, fontSize = 13.sp)
                             IconButton(onClick = { viewModel.removeFromCart(item) }) {
-                                Text("✕", color = Color.Red, fontWeight = FontWeight.Bold)
+                                Text("[X]", color = Color.Red, fontWeight = FontWeight.Bold, fontSize = 11.sp)
                             }
                         }
                     }
@@ -83,29 +83,29 @@ fun CheckoutScreen(
         ) {
             Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("المجموع الفرعي:", color = BrandTextSecondary, fontSize = 13.sp)
+                    Text("المجموع الفرعي:", color = BrandTextSecondary)
                     Text("${String.format("%.2f", subtotal)} ر.س", color = BrandTextPrimary, fontWeight = FontWeight.Bold)
                 }
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("ضريبة القيمة المضافة (15%):", color = BrandTextSecondary, fontSize = 13.sp)
+                    Text("ضريبة القيمة المضافة (15%):", color = BrandTextSecondary)
                     Text("${String.format("%.2f", vat)} ر.س", color = BrandTextPrimary, fontWeight = FontWeight.Bold)
                 }
-                Divider(color = BrandSurface)
+                HorizontalDivider(color = BrandSurface)
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text("الإجمالي الكلي:", color = BrandTextPrimary, fontWeight = FontWeight.Black, fontSize = 16.sp)
+                    Text("المبلغ الإجمالي المستحق:", fontWeight = FontWeight.Black, color = BrandTextPrimary, fontSize = 16.sp)
                     Text("${String.format("%.2f", total)} ر.س", color = BrandPrimary, fontWeight = FontWeight.Black, fontSize = 18.sp)
                 }
+                Spacer(modifier = Modifier.height(6.dp))
+                Button(
+                    onClick = { viewModel.checkout("مدى / البطاقة الائتمانية") },
+                    colors = ButtonDefaults.buttonColors(containerColor = BrandPrimary),
+                    shape = RoundedCornerShape(12.dp),
+                    enabled = state.cart.isNotEmpty(),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("تأكيد ودفع الفاتورة", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 15.sp)
+                }
             }
-        }
-
-        Button(
-            onClick = { viewModel.checkout() },
-            enabled = state.cart.isNotEmpty() && !state.isCheckingOut,
-            colors = ButtonDefaults.buttonColors(containerColor = BrandPrimary),
-            shape = RoundedCornerShape(14.dp),
-            modifier = Modifier.fillMaxWidth().height(52.dp)
-        ) {
-            Text(if (state.isCheckingOut) "جاري المعالجة..." else "إتمام الدفع عبر Mada / Apple Pay", fontWeight = FontWeight.Bold, color = Color.Black, fontSize = 14.sp)
         }
     }
 }
